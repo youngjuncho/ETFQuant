@@ -6,7 +6,8 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 class BAA:
-    def __init__(self):
+    def __init__(self, common):
+        self._common = common
         self._aggressive_assets = [
             "QQQ",  # Invesco QQQ Trust | NASDAQ
             "EFA",  # iShares MSCI EAFE : Developed Market Stocks
@@ -46,14 +47,7 @@ class BAA:
             + 2 * self._calculate_rate_of_return(ticker, 6) + 1 * self._calculate_rate_of_return(ticker, 12)
 
     def _calculate_rate_of_return(self, ticker, period):
-        end_date = datetime.today()
-        begin_date = end_date - relativedelta(months=period)
-
-        closing_price = yf.download(ticker, start=begin_date, end=end_date, progress=False)['Close']
-        first_day_price = closing_price.iloc[0]
-        last_day_price = closing_price.iloc[-1]
-
-        return last_day_price / first_day_price - 1
+        return self._common.calculate_rate_of_return(ticker, period)
 
     def _calculate_divergence(self, ticker):
         end_date = datetime.today()

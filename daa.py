@@ -1,12 +1,8 @@
 # Dynamic Asset Allocation with Bonds Strategy
 
-import yfinance as yf
-
-from datetime import datetime
-from dateutil.relativedelta import relativedelta
-
 class DAA:
-    def __init__(self):
+    def __init__(self, common):
+        self._common = common
         self._aggressive_assets = [
             "SHY",  # iShares 1-3 Year Treasury Bond : US Short-term Government Bonds
             "TIP",  # iShares TIPS Bond : US Treasury Inflation-Protected Securities
@@ -30,13 +26,5 @@ class DAA:
         else:
             return top_3_aggressive_assets
 
-    def _calculate_rate_of_return(self, ticker, period=6):
-        end_date = datetime.today()
-        begin_date = end_date - relativedelta(months=period)
-
-        closing_price = yf.download(ticker, start=begin_date, end=end_date, progress=False)['Close']
-
-        first_day_price = closing_price.iloc[0]
-        last_day_price = closing_price.iloc[-1]
-
-        return last_day_price / first_day_price - 1
+    def _calculate_rate_of_return(self, ticker):
+        return self._common.calculate_rate_of_return(ticker, 6)

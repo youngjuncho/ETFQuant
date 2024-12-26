@@ -1,19 +1,30 @@
 from collections import Counter
+from common import Common
 from adm import ADM
 from baa import BAA
 from daa import DAA
+from inverse import Inverse
 
-adm = ADM()
+common = Common()
+
+daa = DAA(common)
+
+adm = ADM(common, daa)
 adm_portfolio = adm.calculate()
 print(f"ADM : {adm_portfolio}")
 
-baa = BAA()
+baa = BAA(common)
 baa_portfolio = baa.calculate()
 print(f"BAA : {baa_portfolio}")
 
-daa = DAA()
 daa_portfolio = daa.calculate()
 print(f"DAA : {daa_portfolio}")
+
+inverse = Inverse(common)
+inverse_portfolio_daa = inverse.calculate(6)
+print(f"INV DAA : {inverse_portfolio_daa}")
+inverse_portfolio_others = inverse.calculate(12)
+print(f"INV Others : {inverse_portfolio_others}")
 
 desired_len = 3
 adm_portfolio.extend(adm_portfolio * (desired_len - len(adm_portfolio)))
