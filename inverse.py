@@ -4,7 +4,7 @@ class Inverse:
     def __init__(self, common):
         self._common = common
         self._assets = [
-            "SPMO", # Invesco S&P 500 Momentum
+            "SH",   # ProShares Short S&P500
             "PSQ",  # ProShares Short QQQ
             "BIL"   # SPDR Bloomberg Barclay 1-3 Month T-Bill : Cash
         ]
