@@ -8,12 +8,18 @@ class Common:
         pass
 
     def calculate_rate_of_return(self, ticker, period):
-        end_date = datetime.today()
-        begin_date = end_date - relativedelta(months=period)
+        try:
+            end_date = datetime.today()
+            begin_date = end_date - relativedelta(months=period)
 
-        closing_price = yf.download(ticker, start=begin_date, end=end_date, progress=False)['Close']
+            closing_price = yf.download(ticker, start=begin_date, end=end_date, progress=False)['Close']
+            if closing_price.empty:
+                raise ValueError(f"No data found for {ticker} in the given period")
 
-        first_day_price = closing_price.iloc[0]
-        last_day_price = closing_price.iloc[-1]
+            first_day_price = closing_price.iloc[0]
+            last_day_price = closing_price.iloc[-1]
 
-        return last_day_price / first_day_price - 1
+            return last_day_price / first_day_price - 1
+        except Exception as e:
+            print(f"Error calculating rate of return for {ticker}: {e}")
+            return None

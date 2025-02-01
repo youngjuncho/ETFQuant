@@ -7,8 +7,17 @@ class ADM:
 
     def calculate(self):
         spy_ror = self._calculate_rate_of_return("SPY")    # SPDR S&P 500 | US Stocks
+        if spy_ror is None:
+            print("Warning: No data for SPY. Stopped.")
+            return []
         efa_ror = self._calculate_rate_of_return("EFA")    # iShares MSCI EAFE : Developed Market Stocks
+        if efa_ror is None:
+            print("Warning: No data for EFA. Stopped.")
+            return []
         bil_ror = self._calculate_rate_of_return("BIL")    # SPDR Bloomberg Barclay 1-3 Month T-Bill : Cash
+        if bil_ror is None:
+            print("Warning: No data for BIL. Stopped.")
+            return []
 
         if spy_ror > bil_ror:
             if spy_ror >= efa_ror:

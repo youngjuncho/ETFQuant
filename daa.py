@@ -14,17 +14,24 @@ class DAA:
             "EMB"   # iShares JP Morgan USD Emerging Markets Bond | Emerging Market Bonds
         ]
         self._safe_assets = [
-            "BIL"   # SPDR Bloomberg Barclays 1-3 Month T-Bill : Cash
+            "BIL"  # SPDR Bloomberg Barclays 1-3 Month T-Bill : Cash
         ]
 
     def calculate(self):
-        aggressive_asset_rors = {ticker: self._calculate_rate_of_return(ticker) for ticker in self._aggressive_assets}
-        top_3_aggressive_assets = [ticker for ticker, v in sorted(aggressive_asset_rors.items(), key=lambda x: x[1], reverse=True)[:3]]
+        # aggressive_asset_rors = {ticker: self._calculate_rate_of_return(ticker) for ticker in self._aggressive_assets}
+        aggressive_asset_rors = {ticker: ror for ticker, ror in
+                                 ((ticker, self._calculate_rate_of_return(ticker)) for ticker in
+                                  self._aggressive_assets) if ror is not None}
+        top3_aggressive_assets = [ticker for ticker, v in
+                                  sorted(aggressive_asset_rors.items(), key=lambda x: x[1], reverse=True)[:3]]
 
-        if any(ror < 0 for ticker, ror in aggressive_asset_rors.items() if ticker in top_3_aggressive_assets):
+        if any(ror < 0 for ticker, ror in aggressive_asset_rors.items() if ticker in top3_aggressive_assets):
             return self._safe_assets
         else:
-            return top_3_aggressive_assets
+            return top3_aggressive_assets
 
     def _calculate_rate_of_return(self, ticker):
-        return self._common.calculate_rate_of_return(ticker, 6)
+        ror = self._common.calculate_rate_of_return(ticker, 6)
+        if ror is None:
+            print(f"Warning: Rate of return for {ticker} could not be calculated.")
+        return ror
