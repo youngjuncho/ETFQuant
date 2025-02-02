@@ -10,9 +10,9 @@ class ADM:
         if spy_ror is None:
             print("Warning: No data for SPY. Stopped.")
             return []
-        efa_ror = self._calculate_rate_of_return("EFA")    # iShares MSCI EAFE : Developed Market Stocks
+        efa_ror = self._calculate_rate_of_return("IEFA")  # iShares Core MSCI EAFE : Developed Market Stocks
         if efa_ror is None:
-            print("Warning: No data for EFA. Stopped.")
+            print("Warning: No data for IEFA. Stopped.")
             return []
         bil_ror = self._calculate_rate_of_return("BIL")    # SPDR Bloomberg Barclay 1-3 Month T-Bill : Cash
         if bil_ror is None:
@@ -23,7 +23,7 @@ class ADM:
             if spy_ror >= efa_ror:
                 return ["SPY"]
             else:
-                return ["EFA"]
+                return ["IEFA"]
         else:
             return self._daa.calculate()
 
