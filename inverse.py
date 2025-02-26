@@ -10,13 +10,7 @@ class Inverse:
         ]
 
     def calculate(self, period):
-        rors = {}
+        rate_of_returns = self._common.calculate_rate_of_returns(self._assets, period)
+        valid_rate_of_returns = {ticker: ror for ticker, ror in rate_of_returns.items() if ror is not None}
 
-        for ticker in self._assets:
-            ror = self._common.calculate_rate_of_return(ticker, period)
-            if ror is None:
-                print(f"Warning: No data or error for {ticker}. Skipping...")
-            else:
-                rors[ticker] = ror
-
-        return [ticker for ticker, v in sorted(rors.items(), key=lambda x: x[1], reverse=True)]
+        return [ticker for ticker, v in sorted(valid_rate_of_returns.items(), key=lambda x: x[1], reverse=True)]
