@@ -1,9 +1,12 @@
 # Bold Asset Allocation Strategy
 
-import yfinance as yf
+import warnings
 
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+from yahooquery import Ticker
+
+warnings.simplefilter(action='ignore', category=FutureWarning)
 
 class BAA:
     def __init__(self, common):
@@ -68,19 +71,20 @@ class BAA:
             print(f"Error calculating rate of return for {ticker}: {e}")
             return None
 
-    def _calculate_divergence(self, ticker):
+    def _calculate_divergence(self, ticker_name):
         try:
             end_date = datetime.today()
             begin_date = end_date - relativedelta(months=13)
 
-            data = yf.download(ticker, start=begin_date, end=end_date, progress=False)
+            ticker = Ticker(ticker_name)
+            data = ticker.history(start=begin_date, end=end_date).reset_index(level=0, drop=True)
             if data.empty:
-                print(f"No data found for {ticker}.")
+                print(f"No data found for {ticker_name}.")
                 return 0
 
-            latest_price = data['Close'].iloc[-1]
+            latest_price = data['close'].iloc[-1]
 
-            data['moving_average'] = data['Close'].rolling(window=270).mean()
+            data['moving_average'] = data['close'].rolling(window=270).mean()
             moving_average = data['moving_average'].iloc[-1]
             if moving_average == 0:
                 print("Warning: moving_average is 0")
@@ -88,5 +92,5 @@ class BAA:
 
             return latest_price / moving_average
         except Exception as e:
-            print(f"Error calculating divergence for {ticker}: {e}")
+            print(f"Error calculating divergence for {ticker_name}: {e}")
             return 0
