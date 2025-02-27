@@ -24,8 +24,9 @@ adm_portfolio = adm.calculate()
 baa_portfolio = baa.calculate()
 daa_portfolio = daa.calculate()
 
-inverse_portfolio_daa = inverse.calculate(6)
-inverse_portfolio_others = inverse.calculate(12)
+inverse_portfolio = inverse.calculate([6, 12])
+inverse_portfolio_daa = inverse_portfolio[6]
+inverse_portfolio_others = inverse_portfolio[12]
 
 print(f"ADM : {adm_portfolio}")
 print(f"BAA : {baa_portfolio}")

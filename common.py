@@ -1,4 +1,5 @@
 import warnings
+import pandas as pd
 
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
@@ -10,53 +11,60 @@ class Common:
     def __init__(self):
         pass
 
-    def calculate_rate_of_return(self, ticker_name, period):
-        try:
-            end_date = datetime.today()
-            begin_date = end_date - relativedelta(months=period)
-
-            ticker = Ticker(ticker_name)
-            closing_price = ticker.history(start=begin_date, end=end_date)['close'].reset_index(level=0, drop=True)
-            if closing_price.empty:
-                raise ValueError(f"No data found for {ticker_name} in the given period")
-
-            first_day_price = closing_price.iloc[0]
-            last_day_price = closing_price.iloc[-1]
-
-            return last_day_price / first_day_price - 1
-        except Exception as e:
-            print(f"Error calculating rate of return for {ticker_name}: {e}")
-            return None
-
-    def calculate_rate_of_returns(self, ticker_names, period):
-        end_date = datetime.today()
-        begin_date = end_date - relativedelta(months=period)
-        tickers = Ticker(ticker_names)
-        prices = self._get_prices(tickers, begin_date, end_date)
+    def get_prices(self, tickers, periods):
+        prices = self._fetch_prices(tickers, periods)
         if prices.empty:
-            return {ticker_name: None for ticker_name in ticker_names}
+            print("Warning: No price data available")
+            return {ticker: pd.DataFrame() for ticker in tickers}
 
-        return self._calculate_rate_of_return(prices, ticker_names)
+        return {ticker: prices[prices['symbol'] == ticker].reset_index(drop=True) for ticker in tickers}
 
-    def _get_prices(self, tickers, begin_date, end_date):
+    def calculate_rate_of_returns(self, tickers, periods):
+        prices = self._fetch_prices(tickers, periods)
+        if prices.empty:
+            print("Warning: No price data available")
+            return {ticker: {period: None for period in periods} for ticker in tickers}
+
+        return self._calculate_rate_of_return(prices, tickers, periods)
+
+    def _fetch_prices(self, tickers, periods):
+        end_date = datetime.today()
+        begin_date = end_date - relativedelta(months=max(periods))
         try:
-            return tickers.history(start=begin_date, end=end_date)['close'].reset_index(level=0, drop=False)
+            prices = Ticker(tickers).history(start=begin_date, end=end_date)['close'].reset_index(level=0, drop=False)
+            return prices
         except Exception as e:
             print(f"Error get prices for tickers: {e}")
             return pd.DataFrame()
 
-    def _calculate_rate_of_return(self, prices, ticker_names):
-        results = {}
+    def _calculate_rate_of_return(self, prices, tickers, periods):
+        results = {ticker: {} for ticker in tickers}
+        end_date = datetime.today()
 
-        for ticker_name in ticker_names:
-            price = prices[prices['symbol'] == ticker_name]
-            if price.empty:
-                print(f"Warning: No price for {ticker_name}. Skipping...")
-                results[ticker_name] = None
+        for ticker in tickers:
+            price = prices[prices['symbol'] == ticker].reset_index()
+            if 'date' not in price.columns:
+                print(f"Error: 'date' column not found in price data for {ticker}")
+                for period in periods:
+                    results[ticker][period] = None
                 continue
 
-            first_day_price = price.iloc[0]['close']
-            last_day_price = price.iloc[-1]['close']
-            results[ticker_name] = last_day_price / first_day_price - 1
+            price['date'] = pd.to_datetime(price['date'])
+            if price.empty:
+                print(f"Warning: No price for {ticker}. Skipping...")
+                for period in periods:
+                    results[ticker][period] = None
+                continue
+
+            begin_dates = {period: end_date - relativedelta(months=period) for period in periods}
+            for period, begin_date in begin_dates.items():
+                try:
+                    closest_idx = (price['date'] - begin_date).abs().idxmin()
+                    first_day_price = price.loc[closest_idx, 'close']
+                    last_day_price = price.iloc[-1]['close']
+                    results[ticker][period] = last_day_price / first_day_price - 1
+                except Exception as e:
+                    print(f"Error in calculating rate of return for {ticker}, period {period}: {e}")
+                    results[ticker][period] = None
 
         return results

@@ -18,8 +18,8 @@ class DAA:
         ]
 
     def calculate(self):
-        rors = self._common.calculate_rate_of_returns(self._aggressive_assets, 6)
-        valid_rors = {ticker: ror for ticker, ror in rors.items() if ror is not None}
+        rors = self._common.calculate_rate_of_returns(self._aggressive_assets, [6])
+        valid_rors = {ticker: ror.get(6, None) for ticker, ror in rors.items() if ror.get(6, None) is not None}
         if not valid_rors:
             print("Warning: No valid aggressive asset rors. Defaulting to safe assets.")
             return self._safe_assets
