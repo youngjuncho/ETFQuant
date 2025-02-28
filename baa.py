@@ -1,12 +1,4 @@
 # Bold Asset Allocation Strategy
-import time
-from common import Common
-
-import warnings
-
-from yahooquery import Ticker
-
-warnings.simplefilter(action='ignore', category=FutureWarning)
 
 class BAA:
     def __init__(self, common):
@@ -55,7 +47,7 @@ class BAA:
 
     def _calculate_momentum_score(self, ticker, rors):
         ticker_rors = rors.get(ticker, {})
-        return sum(self._weights[i] * ticker_rors.get(period, 0) for i, period in enumerate(self._periods))
+        return sum(self._weights[i] * (ticker_rors.get(period) or 0) for i, period in enumerate(self._periods))
 
     def _calculate_divergences(self, tickers, prices):
         divergences = {}

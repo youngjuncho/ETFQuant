@@ -28,18 +28,27 @@ class Common:
         return self._calculate_rate_of_return(prices, tickers, periods)
 
     def _fetch_prices(self, tickers, periods):
-        end_date = datetime.today()
+        end_date = datetime.today().replace(tzinfo=None)
         begin_date = end_date - relativedelta(months=max(periods))
+
         try:
             prices = Ticker(tickers).history(start=begin_date, end=end_date)['close'].reset_index(level=0, drop=False)
+            if prices.empty:
+                print(f"Warning: No price data available for {tickers}")
+                return pd.DataFrame()
+
+            if isinstance(prices.index, pd.DatetimeIndex):
+                prices.index = prices.index.tz_localize(None)
+
             return prices
+
         except Exception as e:
             print(f"Error get prices for tickers: {e}")
             return pd.DataFrame()
 
     def _calculate_rate_of_return(self, prices, tickers, periods):
         results = {ticker: {} for ticker in tickers}
-        end_date = datetime.today()
+        end_date = datetime.today().replace(tzinfo=None)
 
         for ticker in tickers:
             price = prices[prices['symbol'] == ticker].reset_index()
@@ -49,7 +58,9 @@ class Common:
                     results[ticker][period] = None
                 continue
 
-            price['date'] = pd.to_datetime(price['date'])
+            price['date'] = pd.to_datetime(price['date'], utc=True)
+            price['date'] = price['date'].dt.tz_localize(None)
+
             if price.empty:
                 print(f"Warning: No price for {ticker}. Skipping...")
                 for period in periods:
