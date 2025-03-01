@@ -1,5 +1,7 @@
-import warnings
+import aiohttp
+import asyncio
 import pandas as pd
+import warnings
 
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
@@ -11,40 +13,45 @@ class Common:
     def __init__(self):
         pass
 
-    def get_prices(self, tickers, periods):
-        prices = self._fetch_prices(tickers, periods)
+    async def get_prices(self, tickers, periods):
+        prices = await self._fetch_prices(tickers, periods)
         if prices.empty:
             print("Warning: No price data available")
             return {ticker: pd.DataFrame() for ticker in tickers}
 
         return {ticker: prices[prices['symbol'] == ticker].reset_index(drop=True) for ticker in tickers}
 
-    def calculate_rate_of_returns(self, tickers, periods):
-        prices = self._fetch_prices(tickers, periods)
+    async def calculate_rate_of_returns(self, tickers, periods):
+        prices = await self._fetch_prices(tickers, periods)
         if prices.empty:
             print("Warning: No price data available")
             return {ticker: {period: None for period in periods} for ticker in tickers}
 
         return self._calculate_rate_of_return(prices, tickers, periods)
 
-    def _fetch_prices(self, tickers, periods):
+    async def _fetch_prices(self, tickers, periods):
         end_date = datetime.today().replace(tzinfo=None)
         begin_date = end_date - relativedelta(months=max(periods))
 
-        try:
-            prices = Ticker(tickers).history(start=begin_date, end=end_date)['close'].reset_index(level=0, drop=False)
-            if prices.empty:
-                print(f"Warning: No price data available for {tickers}")
+        async with aiohttp.ClientSession() as session:
+            try:
+                loop = asyncio.get_running_loop()
+                prices = await loop.run_in_executor(None,
+                                                    lambda: Ticker(tickers).history(start=begin_date, end=end_date)[
+                                                        'close'].reset_index(level=0, drop=False))
+
+                if prices.empty:
+                    print(f"Warning: No price data available for {tickers}")
+                    return pd.DataFrame()
+
+                if isinstance(prices.index, pd.DatetimeIndex):
+                    prices.index = prices.index.tz_localize(None)
+
+                return prices
+
+            except Exception as e:
+                print(f"Error get prices for tickers: {e}")
                 return pd.DataFrame()
-
-            if isinstance(prices.index, pd.DatetimeIndex):
-                prices.index = prices.index.tz_localize(None)
-
-            return prices
-
-        except Exception as e:
-            print(f"Error get prices for tickers: {e}")
-            return pd.DataFrame()
 
     def _calculate_rate_of_return(self, prices, tickers, periods):
         results = {ticker: {} for ticker in tickers}

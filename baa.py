@@ -27,11 +27,11 @@ class BAA:
         self._weights = [12, 4, 2, 1]
         self._periods = [1, 3, 6, 12]
 
-    def calculate(self):
-        rors = self._common.calculate_rate_of_returns(self._canary_assets, self._periods)
+    async def calculate(self):
+        rors = await self._common.calculate_rate_of_returns(self._canary_assets, self._periods)
         cannary_asset_mss = {ticker: self._calculate_momentum_score(ticker, rors) for ticker in self._canary_assets}
 
-        prices = self._common.get_prices(set(self._aggressive_assets + self._safe_assets), [13])
+        prices = await self._common.get_prices(set(self._aggressive_assets + self._safe_assets), [13])
 
         aggressive_asset_dvs = self._calculate_divergences(self._aggressive_assets, prices)
         safe_asset_dvs = self._calculate_divergences(self._safe_assets, prices)

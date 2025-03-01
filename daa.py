@@ -17,8 +17,8 @@ class DAA:
             "BIL"  # SPDR Bloomberg Barclays 1-3 Month T-Bill : Cash
         ]
 
-    def calculate(self):
-        rors = self._common.calculate_rate_of_returns(self._aggressive_assets, [6])
+    async def calculate(self):
+        rors = await self._common.calculate_rate_of_returns(self._aggressive_assets, [6])
         valid_rors = {ticker: ror.get(6, None) for ticker, ror in rors.items() if ror.get(6, None) is not None}
         if not valid_rors:
             print("Warning: No valid aggressive asset rors. Defaulting to safe assets.")

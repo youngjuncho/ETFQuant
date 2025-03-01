@@ -10,8 +10,8 @@ class ADM:
             "BIL",  # SPDR Bloomberg Barclay 1-3 Month T-Bill : Cash
         ]
 
-    def calculate(self):
-        rors = self._common.calculate_rate_of_returns(self._assets, [12])
+    async def calculate(self):
+        rors = await self._common.calculate_rate_of_returns(self._assets, [12])
         if any(not rors[ticker] or rors[ticker].get(12) is None for ticker in self._assets):
             print("Warning: Missing data for one or more tickers. Stopped.")
             return []
@@ -23,4 +23,4 @@ class ADM:
         if spy_ror > bil_ror:
             return ["SPY" if spy_ror >= iefa_ror else "IEFA"]
         else:
-            return self._daa.calculate()
+            return await self._daa.calculate()
