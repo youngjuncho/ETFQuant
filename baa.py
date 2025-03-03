@@ -5,24 +5,26 @@ class BAA:
         self._common = common
         self._aggressive_assets = [
             "QQQ",  # Invesco QQQ Trust | NASDAQ
-            "IEFA",  # iShares Core MSCI EAFE : Developed Market Stocks
-            "IEMG",  # iShares Core MSCI Emerging Markets : Emerging Market Stocks
-            "AGG"  # iShares Core US Aggregate Bond : US Mixed Bonds
+            "IEFA", # iShares Core MSCI EAFE : Developed Market Stocks
+            "IEMG", # iShares Core MSCI Emerging Markets : Emerging Market Stocks
+            "AGG",  # iShares Core US Aggregate Bond : US Mixed Bonds
+            "GLD",  # SPDR Gold Shares
+            "DBC"   # Invesco DB Commodity Index Tracking Fund
         ]
         self._safe_assets = [
             "TLT",  # iShares 20+ Year Treasury Bond : US Long-term Bond
             "TIP",  # iShares TIPS Bond : US Inflation-linked Bond
-            "PDBC",  # Invesco Optimum Yield Diversified Commodity Strategy No K-1 : Commodities
+            "PDBC", # Invesco Optimum Yield Diversified Commodity Strategy No K-1 : Commodities
             "AGG",  # iShares Core US Aggregate Bond : US Mixed Bonds
             "LQD",  # iShares iBoxx $ Investment Grade Corporate Bond : US Corporate Bonds
             "IEF",  # iShares 7-10 Year Treasury Bond : US Intermediate-Term Bonds
-            "BIL"  # SPDR Bloomberg Barclays 1-3 Month T-Bill : Cash
+            "BIL"   # SPDR Bloomberg Barclays 1-3 Month T-Bill : Cash
         ]
         self._canary_assets = [
             "SPY",  # SPDR S&P 500 | US Stocks
-            "IEFA",  # iShares Core MSCI EAFE : Developed Market Stocks
-            "IEMG",  # iShares Core MSCI Emerging Markets : Emerging Market Stocks
-            "AGG"  # iShares Core US Aggregate Bond : US Mixed Bonds
+            "IEFA", # iShares Core MSCI EAFE : Developed Market Stocks
+            "IEMG", # iShares Core MSCI Emerging Markets : Emerging Market Stocks
+            "AGG"   # iShares Core US Aggregate Bond : US Mixed Bonds
         ]
         self._weights = [12, 4, 2, 1]
         self._periods = [1, 3, 6, 12]

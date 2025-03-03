@@ -6,7 +6,7 @@ class ADM:
         self._daa = daa
         self._assets = [
             "SPY",  # SPDR S&P 500 | US Stocks
-            "IEFA",  # iShares Core MSCI EAFE : Developed Market Stocks
+            "IEFA", # iShares Core MSCI EAFE : Developed Market Stocks
             "BIL",  # SPDR Bloomberg Barclay 1-3 Month T-Bill : Cash
         ]
 

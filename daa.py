@@ -11,7 +11,7 @@ class DAA:
             "TLT",  # iShares 20+ Year Treasury Bond : US Long-term Treasury Bonds
             "HYG",  # iShares iBoxx $ High Yield Corporate Bond : US High-Yield Bonds
             "BWX",  # SPDR Bloomberg Barclays International Treasury Bond : Developed Market Bonds
-            "EMB"  # iShares JP Morgan USD Emerging Markets Bond | Emerging Market Bonds
+            "EMB"   # iShares JP Morgan USD Emerging Markets Bond | Emerging Market Bonds
         ]
         self._safe_assets = [
             "BIL"  # SPDR Bloomberg Barclays 1-3 Month T-Bill : Cash
