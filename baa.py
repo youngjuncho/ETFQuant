@@ -7,14 +7,13 @@ class BAA:
             "QQQ", # Invesco QQQ Trust | NASDAQ
             "EFA", # iShares Core MSCI EAFE : Developed Market Stocks
             "EEM", # iShares MSCI Emerging Markets : Emerging Market Stocks
-            "AGG", # iShares Core US Aggregate Bond : US Mixed Bonds
             "GLD", # SPDR Gold Shares
             "DBC"  # Invesco DB Commodity Index Tracking Fund
         ]
         self._safe_assets = [
             "TLT", # iShares 20+ Year Treasury Bond : US Long-term Bond
             "TIP", # iShares TIPS Bond : US Inflation-linked Bond
-            "PDBC",# Invesco Optimum Yield Diversified Commodity Strategy No K-1 : Commodities
+            "DBC"  # Invesco DB Commodity Index Tracking Fund
             "AGG", # iShares Core US Aggregate Bond : US Mixed Bonds
             "LQD", # iShares iBoxx $ Investment Grade Corporate Bond : US Corporate Bonds
             "IEF", # iShares 7-10 Year Treasury Bond : US Intermediate-Term Bonds
