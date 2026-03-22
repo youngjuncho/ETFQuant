@@ -4,30 +4,22 @@ from common import Common
 from adm import ADM
 from baa import BAA
 from daa import DAA
-from inverse import Inverse
 
 async def main():
     common = Common()
     daa = DAA(common)
     adm = ADM(common, daa)
     baa = BAA(common)
-    inverse = Inverse(common)
 
-    adm_portfolio, baa_portfolio, daa_portfolio, inverse_portfolio = await gather(
+    adm_portfolio, baa_portfolio, daa_portfolio = await gather(
         adm.calculate(),
         baa.calculate(),
         daa.calculate(),
-        inverse.calculate([6, 12])
     )
-
-    inverse_portfolio_daa = inverse_portfolio[6]
-    inverse_portfolio_others = inverse_portfolio[12]
 
     print(f"ADM : {adm_portfolio}")
     print(f"BAA : {baa_portfolio}")
     print(f"DAA : {daa_portfolio}")
-    print(f"INV DAA : {inverse_portfolio_daa}")
-    print(f"INV Others : {inverse_portfolio_others}")
 
     adm_portfolio = get_extended_portfolio(adm_portfolio)
     baa_portfolio = get_extended_portfolio(baa_portfolio)
