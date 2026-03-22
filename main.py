@@ -5,6 +5,7 @@ from adm import ADM
 from baa import BAA
 from daa import DAA
 
+
 async def main():
     common = Common()
     daa = DAA(common)
@@ -31,8 +32,30 @@ async def main():
 
     show_portfolio(portfolio)
 
+
 def get_extended_portfolio(portfolio, desired_length=3):
-    return portfolio * (desired_length // len(portfolio)) + portfolio[:desired_length % len(portfolio)]
+    mapping_table = {
+        "BIL": "SGOV",
+        "BWX": "BNDX",
+        "DBC": "PDBC",
+        "EEM": "VWO",
+        "EFA": "VEA",
+        "EMB": "VWOB",
+        "GLD": "GLDM",
+        "HYG": "SPHY",
+        "IEF": "VGIT",
+        "LQD": "VCIT",
+        "QQQ": "QQQM",
+        "SHY": "SCHO",
+        "SLV": "SIVR",
+        "SPY": "SPYM",
+        "TIP": "SCHP",
+        "TLT": "VGLT",
+    }
+    updated_portfolio = [mapping_table.get(ticker, ticker) for ticker in portfolio]
+    return (updated_portfolio * (desired_length // len(updated_portfolio)) +
+            updated_portfolio[:desired_length % len(updated_portfolio)])
+
 
 def show_portfolio(portfolio):
     print("")
