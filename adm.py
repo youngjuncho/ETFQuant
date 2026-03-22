@@ -5,9 +5,9 @@ class ADM:
         self._common = common
         self._daa = daa
         self._assets = [
-            "SPY",  # SPDR S&P 500 | US Stocks
-            "IEFA", # iShares Core MSCI EAFE : Developed Market Stocks
-            "BIL",  # SPDR Bloomberg Barclay 1-3 Month T-Bill : Cash
+            "SPY", # SPDR S&P 500 | US Stocks
+            "EFA", # iShares MSCI EAFE : Developed Market Stocks
+            "BIL", # SPDR Bloomberg Barclay 1-3 Month T-Bill : Cash
         ]
 
     async def calculate(self):
@@ -17,10 +17,10 @@ class ADM:
             return []
 
         spy_ror = rors["SPY"][12]
-        iefa_ror = rors["IEFA"][12]
+        efa_ror = rors["EFA"][12]
         bil_ror = rors["BIL"][12]
 
         if spy_ror > bil_ror:
-            return ["SPY" if spy_ror >= iefa_ror else "IEFA"]
+            return ["SPY" if spy_ror >= efa_ror else "EFA"]
         else:
             return await self._daa.calculate()
