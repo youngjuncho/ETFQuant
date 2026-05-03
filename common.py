@@ -36,21 +36,19 @@ class Common:
         async with aiohttp.ClientSession() as session:
             try:
                 loop = asyncio.get_running_loop()
-                prices = await loop.run_in_executor(None,
-                                                    lambda: Ticker(tickers).history(start=begin_date, end=end_date)[
-                                                        'close'].reset_index(level=0, drop=False))
+                prices = await loop.run_in_executor(None, lambda: Ticker(tickers).history(start=begin_date, end=end_date))
 
                 if prices.empty:
-                    print(f"Warning: No price data available for {tickers}")
                     return pd.DataFrame()
 
-                if isinstance(prices.index, pd.DatetimeIndex):
-                    prices.index = prices.index.tz_localize(None)
+                prices = prices['close'].reset_index()
+                if 'date' in prices.columns:
+                    prices['date'] = pd.to_datetime(prices['date']).dt.tz_localize(None)
 
                 return prices
 
             except Exception as e:
-                print(f"Error get prices for tickers: {e}")
+                print(f"Error get prices: {e}")
                 return pd.DataFrame()
 
     def _calculate_rate_of_return(self, prices, tickers, periods):
