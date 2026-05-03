@@ -42,10 +42,10 @@ def show_individual_results(names, results):
 def combine_portfolios(results_list):
     mapping_table = {
         "SPY": "SPYM", "QQQ": "QQQM", "IWM": "VTWO", "EFA": "VEA",
-        "EEM": "IEMG", "VWO": "IEMG", "AGG": "BND", "BIL": "SGOV",
-        "SHY": "SCHO", "IEF": "VGIT", "TLT": "VGLT", "TIP": "SCHP",
-        "LQD": "VCIT", "HYG": "SPHY", "BWX": "BNDX", "EMB": "VWOB",
-        "GLD": "GLDM", "DBC": "PDBC", "VNQ": "USRT", "SLV": "SIVR"
+        "EEM": "VWO", "AGG": "BND", "BIL": "SGOV", "SHY": "SCHO",
+        "IEF": "VGIT", "TLT": "VGLT", "TIP": "SCHP", "LQD": "VCIT",
+        "HYG": "SPHY", "BWX": "BNDX", "EMB": "VWOB", "GLD": "GLDM",
+        "DBC": "PDBC", "VNQ": "USRT", "SLV": "SIVR"
     }
     combined = {}
 
